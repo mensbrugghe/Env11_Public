@@ -1,0 +1,27 @@
+\begin{tikzpicture}[x=40mm,y=500mm]
+
+%\draw[help lines] (0,0) grid (13,13);
+
+\draw[<->] (-1.1,0) -- (1.1,0) node[right] {\emph{devRoR}};
+\draw[<->] (0,-0.08) -- (0,0.110) node[right] {\emph{grK}};
+
+\draw[color=gray!30] (-1,-0.07) -- (1,-0.07) node[right] {\color{black}{$g=-7\%$}};
+\draw[color=gray!30] (-1,0.04) -- (1,0.04) node[right] {\color{black}{$g=4\%$}};
+\draw[color=gray!30] (-1,0.1) -- (1,0.1) node[right] {\color{black}{$g=10\%$}};
+
+\draw (-1,0.003) -- (-1,-0.003) node[below] {-1} ;
+\draw (-0.5,0.003) -- (-0.5,-0.003) node[below] {-0.5} ;
+\draw (0.5,0.003) -- (0.5,-0.003) node[below] {0.5} ;
+\draw (1,0.003) -- (1,-0.003) node[below] {1} ;
+
+%\foreach \i in {0.5,1.0,...,2.5} {
+%	\draw[color=gray!30] (\i,0) -- (\i,2.5) ;
+%}
+
+%\foreach \i in {0.5,1.0,...,2.5} {
+%	\draw[color=gray!30] (0,\i) -- (2.5,\i) ;
+%}
+
+\draw[scale=1,domain=-1.0:1.0,smooth,variable=\x,blue,thick] plot 
+({\x},{(0.1*exp(7.7272*\x)-0.07*(0.1-0.04)/(0.04-(-0.07)))/(exp(7.7272*\x)+(0.1-0.04)/(0.04-(-0.07)))}) ;
+\end{tikzpicture}

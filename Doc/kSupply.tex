@@ -1,0 +1,45 @@
+\begin{figure}[ht]
+	\centering
+	\subfloat[][\scriptsize{$\eta^I = \infty$}]{
+		\begin{tikzpicture}[scale=0.9]
+		\begin{axis}[axis x line=bottom, axis y line=left, 
+		xtick={0,1,...,10}, ytick={0.0,0.5,...,2.0}, xmax=11, ymin=0, ymax=2.1, ylabel=$\mathit{RR}$,
+		y tick label style={/pgf/number format/.cd,fixed,fixed zerofill,precision=1,/tikz/.cd}]
+		\addplot[DodgerBlue2,very thick,mark=none,domain=0:5,samples=100]
+		{0.5*(1+(5/5)^1.5)};
+		\addplot[gray,very thick,mark=none,domain=5:10,samples=100]
+		{0.5*(1+(5/5)^1.5)} ;
+		\addplot[Orchid,very thick,mark=none,domain=0.5:10,samples=200]
+		{0.5*((\x/1)^(-1/1)+0.75)} node[below] {$K^{\mathit{lo}}$};
+		\addplot[LimeGreen,very thick,mark=none,domain=1:10,samples=200]
+		{0.5*((\x/4)^(-1/1)+1.5)} node[below] {$K^{\mathit{hi}}$};
+		\addplot[lightgray,thin,mark=none]
+		coordinates{(5,0) (5,2.0)} node[right,yshift=-0.25cm] {$K_{0}$} ;
+		%\addplot[Orchid,thin,dashed,mark=none]
+		%coordinates{(11.6,0) (11.6,1)} ;
+		\end{axis}
+		\end{tikzpicture}
+	} \qquad
+	\subfloat[][\scriptsize{$\eta^{\mathit{I}} \ne \infty$}]{
+		\begin{tikzpicture}[scale=0.9]
+		\begin{axis}[axis x line=bottom, axis y line=left, 
+		xtick={0,1,...,10}, ytick={0.0,0.5,...,2.5}, xmax=11, ymin=0, ymax=2.1, ylabel=$\mathit{RR}$,
+		y tick label style={/pgf/number format/.cd,fixed,fixed zerofill,precision=1,/tikz/.cd}]
+		\addplot[DodgerBlue2,very thick,mark=none,domain=0:5,samples=100]
+		{0.5*(1+(\x/5)^4)};
+		\addplot[gray,very thick,mark=none,domain=5:10,samples=100]
+		{0.5*(1+(5/5)^1.5)};
+		\addplot[Orchid,very thick,mark=none,domain=0.5:10,samples=200]
+		{0.5*((\x/1)^(-1/1)+0.75)} node[below] {$K^{\mathit{lo}}$};
+		\addplot[LimeGreen,very thick,mark=none,domain=1:10,samples=200]
+		{0.5*((\x/5)^(-1/1)+1.25)} node[below] {$K^{\mathit{hi}}$};
+		\addplot[lightgray,thin,mark=none]
+		coordinates{(5,0) (5,2.0)} node[right,yshift=-0.25cm] {$K_{0}$} ;
+		%\addplot[Orchid,thin,dashed,mark=none]
+		%coordinates{(11.6,0) (11.6,1)} ;
+		\end{axis}
+		\end{tikzpicture}
+	} \\
+	\caption{Capital supply regimes}
+	\label{fig:kSupply}
+\end{figure}

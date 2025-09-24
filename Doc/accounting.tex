@@ -1,0 +1,374 @@
+This section describes the accounting framework used by the the model. Two
+different accounting frameworks will be described. The first describes the
+analytical SAM underlying the model, i.e. how the SAM can be constructed using
+the variables of the model. The second describes the links between the model
+variables and the initial database as provided by GTAP.\footnote{This refers to
+the new standard database, not the 'classic' GTAP database.} The SAM is not a
+standard SAM and does not represent the full functionality of the model nor the
+underlying database. For example, demand is specified at the Armington level and
+the sales tax are collapsed to a single row dimension.
+
+\section{The analytical SAM}
+
+The analytical SAM is the accounting framework that is derived from the
+variables of the model. In the absence of a shock, the analytical SAM should
+reproduce the input SAM. Table~\ref{tab:AnalSAM} re-produces the analytical SAM.
+Below are a few explanatory notes:
+
+\begin{enumerate}
+   \item The regional index ($r$) is dropped for most of the expressions except
+         when needed, for example in the bilateral trade flows.
+   \item The SAM reflects the differentiation between activities and
+         commodities. The intersection of the activity rows with the commodity
+         columns represents the transformation of domestic production into
+         commodities. In the standard version of the model, the matrix is
+         diagonal and there is a one-to-one mapping between activities and
+         commodities.
+   \item The trade rows under the commodity columns represents the bilateral
+         imports for region $r$. These are priced at border, i.e. CIF, prices.
+         The commodity rows under the trade columns represent bilateral exports
+         from region $r$ and are valued at border, i.e. FOB, prices. At the
+         global level, the difference between the two matrices represents the
+         aggregate value of the trade and transport margins.
+   \item Outbound remittances are calculated post-tax. Inbound remittances
+         accrue to households.
+   \item In the standard GTAP database, most direct taxes are levied on factor
+         remuneration. There is no balancing between private and public savings.
+         Direct household taxation is calibrated as a balancing item to clear
+         the government accounts under the assumption that the deficit is zero.
+         This can readily be modified with supplemental data. Direct household
+         taxation can be negative, reflecting that net transfers between the
+         government and households is positive.
+   \item The \texttt{BOP} row under the trade columns represents aggregate
+         imports from each region (at border prices). Similarly, the trade rows
+         under the \texttt{BOP} column represents the aggregate exports of
+         region $r$ towards each region. The \texttt{BOP} accounts reflect the
+         full balance of payments. For each region, the sum of exports
+         (including the export of trade and transport services) less the sum of
+         imports, adjusted by remittances and net capital income,  equals the
+         net flow of foreign savings. At the global level, the foreign savings
+         cell should be zero.
+\end{enumerate}
+
+\begin{landscape}
+\begin{table}
+\scriptsize
+\caption{Analytical SAM}
+\label{tab:AnalSAM}
+\centering
+\rowcolors{2}{TableOdd}{TableEven}
+\rowcolors{1}{}{lightblue}
+\begin{tabular}{l c c c }
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+{} & \bf{\emph{ACT}($a$)} & \bf{\emph{COMM}($i$)}  & \bf{\emph{LAB}($l$)} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\emph{Activities}($a$) & {} & $\mathit{P}_{a,i} \mathit{X}_{a,i}$ &  {} \\
+\emph{Commodities}($i$) & $\gamma^{eda}_{i,a}\mathit{PAT}_{i}
+    \mathit{XA}_{i,a}$ & {} & {} \\
+\emph{Labor}($l$)                & $\mathit{PF}_{l,a} \mathit{XF}_{l,a} $ & {} & {} \\
+\emph{Capital}($\mathit{cap}$)   & $\mathit{PF}_{\mathit{cap},a} \mathit{XF}_{\mathit{cap},a} $ & {} & {} \\
+\emph{Land}($\mathit{lnd}$)      & $\mathit{PF}_{\mathit{lnd},a} \mathit{XF}_{\mathit{lnd},a} $ & {} & {} \\
+\emph{Nat. Res.}($\mathit{nrs}$) & $\mathit{PF}_{\mathit{nrs},a} \mathit{XF}_{\mathit{nrs},a} $ & {} & {} \\
+\emph{Nat. Res.}($\mathit{wat}$) & $\mathit{PF}_{\mathit{wat},a} \mathit{XF}_{\mathit{nrs},a} $ & {} & {} \\
+\emph{Indirect tax}              & $\sum_i{\tau^a_{i,a} \gamma^{eda}_{i,a} \mathit{PAT}_i \mathit{XA}_{i,a}}$ & {} & {} \\
+\emph{Production tax}            & {} & {$\sum_a{\tau^p_{a,i} \mathit{P}_{a,i} \mathit{X}_{a,i}}$} & {} \\
+\emph{Factor taxes}              & $ \sum_f{\tau^v_{f,a} \mathit{PF}_{l,a} \mathit{XF}_{f,a} } $ & {} & {} \\
+\emph{Import tax} & {} &
+$\sum_s{\tau^{m}_{s,i,r}\mathit{PWM}_{s,i,r} \mathit{XW}^d_{s,i,r}} $& {} \\
+\emph{Export tax} & {} &
+  $\sum_d{\tau^{e}_{r,i,d}\mathit{PE}_{r,i,d} \mathit{XW}^s_{r,i,d}} $& {} \\
+\emph{Direct tax} & {} & {} & $\sum_a{\kappa^f_{l,a}\mathit{PF}_{l,a} \mathit{XF}_{l,a}}$ \\
+\emph{Household}  & {} & {} &
+   $\sum_a{(1-\kappa^f_{l,a})\mathit{PF}_{l,a}\mathit{XF}_{l,a}}
+   - \sum_d{\mathit{Remit}_{d,l,r}}$ \\
+\emph{Government}         & {} & {} & {} \\
+\emph{Investment}         & {} & {} & {} \\
+\emph{Depreciation}         & {} & {} & {} \\
+\emph{Trade margins}      & {} & {} & {} \\
+\emph{Trade}($s$)         & {} & $\mathit{PWM}_{s,i,r}
+   \mathit{XW}^d_{s,i,r}$ & {} \\
+\emph{Balance of payments} & {} & {} & ${\sum_d{\mathit{Remit}_{d,l,r}}}$ \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\end{tabular}
+\end{table}
+\end{landscape}
+
+\begin{landscape}
+\begin{table}
+\scriptsize
+\caption*{Table~\ref{tab:AnalSAM} Analytical SAM, ctd.}
+\centering
+\rowcolors{2}{TableOdd}{TableEven}
+\rowcolors{1}{}{lightblue}
+\begin{tabular}{l c c c c}
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+{} & \bf{\emph{CAP}} & \bf{\emph{LND}} & \bf{\emph{NRS}} & \bf{\emph{WAT}} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\emph{Activities}($a$)            & {} & {} & {} & {} \\
+\emph{Commodities}($i$)          & {} & {} & {} & {} \\
+\emph{Labor}($l$)                 & {} & {} & {} & {} \\
+\emph{Capital}($\mathit{cap}$)   & {} & {} & {} & {} \\
+\emph{Land}($\mathit{lnd}$)       & {} & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{nrs}$) & {} & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{wat}$)  & {} & {} & {} & {} \\
+\emph{Indirect tax}   & {} & {} & {} & {} \\
+\emph{Production tax}  & {} & {} & {} & {} \\
+\emph{Factor taxes}   & {} & {} & {} & {} \\
+\emph{Import tax}      & {} & {} & {} & {} \\
+\emph{Export tax}     & {} & {} & {} & {} \\
+\emph{Direct tax} &
+   {$\displaystyle \sum_a{\kappa^f_{\mathit{cap},a}\mathit{PF}_{\mathit{cap},a} \mathit{XF}_{\mathit{cap},a}}$} &
+   {$\displaystyle \sum_a{\kappa^f_{\mathit{lnd},a}\mathit{PF}_{\mathit{lnd},a} \mathit{XF}_{\mathit{lnd},a}}$} &
+   {$\displaystyle \sum_a{\kappa^f_{\mathit{nrs},a}\mathit{PF}_{\mathit{nrs},a} \mathit{XF}_{\mathit{nrs},a}}$} &
+   {$\displaystyle \sum_a{\kappa^f_{\mathit{wat},a}\mathit{PF}_{\mathit{wat},a} \mathit{XF}_{\mathit{wat},a}}$} \\
+\emph{Household}
+   & {$\displaystyle \begin{array}{c} \sum_a{(1-\kappa^f_{\mathit{cap},a})\mathit{PF}_{\mathit{cap},a} \mathit{XF}_{\mathit{cap},a}} \\
+            - \mathit{YQTF}\\ \end{array}$}
+   & {$\displaystyle \sum_a{(1-\kappa^f_{\mathit{lnd},a})\mathit{PF}_{\mathit{lnd},a} \mathit{XF}_{\mathit{lnd},a}}$}
+   & {$\displaystyle \sum_a{(1-\kappa^f_{\mathit{nrs},a})\mathit{PF}_{\mathit{nrs},a} \mathit{XF}_{\mathit{nrs},a}}$}
+   & {$\displaystyle \sum_a{(1-\kappa^f_{\mathit{wat},a})\mathit{PF}_{\mathit{wat},a} \mathit{XF}_{\mathit{wat},a}}$} \\
+\emph{Government}     & {} & {} & {} & {} \\
+\emph{Investment}     & {} & {} & {} & {} \\
+\emph{Depreciation}   & {} & {} & {} & {} \\
+\emph{Trade margins}  & {} & {} & {} & {} \\
+\emph{Trade}($s$)     & {} & {} & {} & {} \\
+\emph{Balance of payments} & {$\mathit{YQTF}_r$} & {} & {} & {} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\end{tabular}
+\end{table}
+\end{landscape}
+
+\begin{landscape}
+\begin{table}
+\scriptsize
+\caption*{Table~\ref{tab:AnalSAM} Analytical SAM, ctd.}
+\centering
+\rowcolors{2}{TableOdd}{TableEven}
+\rowcolors{1}{}{lightblue}
+\begin{tabular}{l c c c c c c}
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+{} & \bf{\emph{ITX}} & \bf{\emph{PTX}} & \bf{\emph{VTX}} & \bf{\emph{MTX}} & \bf{\emph{ETX}} & \bf{\emph{DTX}} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\emph{Activities}($a$)            & {} & {} & {} & {} & {} & {} \\
+\emph{Commodities}($i$)          & {} & {} & {} & {} & {} & {} \\
+\emph{Labor}($l$)                 & {} & {} & {} & {} & {} & {} \\
+\emph{Capital}($\mathit{cap}$)   & {} & {} & {} & {} & {} & {} \\
+\emph{Land}($\mathit{lnd}$)       & {} & {} & {} & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{nrs}$) & {} & {} & {} & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{wat}$)  & {} & {} & {} & {} & {} & {} \\
+\emph{Indirect tax}   & {} & {} & {} & {} & {} & {} \\
+\emph{Production tax}  & {} & {} & {} & {} & {} & {} \\
+\emph{Factor taxes}   & {} & {} & {} & {} & {} & {} \\
+\emph{Import tax}      & {} & {} & {} & {} & {} & {} \\
+\emph{Export tax}     & {} & {} & {} & {} & {} & {} \\
+\emph{Direct tax}      & {} & {} & {} & {} & {} & {} \\
+\emph{Household}      & {} & {} & {} & {} & {} & {} \\
+\emph{Government}
+   & {$\mathit{YGOV}_{\mathit{itx}}$}
+   & {$\mathit{YGOV}_{\mathit{ptx}}$}
+   & {$\mathit{YGOV}_{\mathit{vtx}}$}
+   & {$\mathit{YGOV}_{\mathit{mtx}}$}
+   & {$\mathit{YGOV}_{\mathit{etx}}$}
+   & {$\mathit{YGOV}_{\mathit{dtx}}$} \\
+\emph{Investment}     & {} & {} & {} & {} & {} & {} \\
+\emph{Depreciation}    & {} & {} & {} & {} & {} & {} \\
+\emph{Trade margins}  & {} & {} & {} & {} & {} & {} \\
+\emph{Trade}($s$)      & {} & {} & {} & {} & {} & {} \\
+\emph{Balance of payments} & {} & {} & {} & {} & {} & {} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\end{tabular}
+\end{table}
+\end{landscape}
+
+\begin{landscape}
+\begin{table}
+\scriptsize
+\caption*{Table~\ref{tab:AnalSAM} Analytical SAM, ctd.}
+\centering
+\rowcolors{2}{TableOdd}{TableEven}
+\rowcolors{1}{}{lightblue}
+\begin{tabular}{ l c c c c }
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+{} & \bf{\emph{HHD}} & \bf{\emph{GOV}} & \bf{\emph{INV}} & \bf{\emph{DEPR}} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\emph{Activities}($a$)            & {} & {} & {} & {} \\
+\emph{Commodities}($i$)
+   & {$\gamma^{eda}_{i,h}\mathit{PAT}^a_{i} \mathit{XA}_{i,h}$}
+   & {$\gamma^{eda}_{i,\mathit{gov}}\mathit{PAT}^a_{i} \mathit{XA}_{i,\mathit{gov}}$}
+   & {$\gamma^{eda}_{i,\mathit{inv}}\mathit{PA}^a_{i} \mathit{XA}_{i,\mathit{inv}}$}
+   & {} \\
+\emph{Labor}($l$)                 & {} & {} & {} & {} \\
+\emph{Capital}($\mathit{cap}$)   & {} & {} & {} & {} \\
+\emph{Land}($\mathit{lnd}$)       & {} & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{nrs}$) & {} & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{wat}$)  & {} & {} & {} & {} \\
+\emph{Indirect tax}
+   & {$\sum_i{\tau^a_{i,\mathit{h}} \gamma^{eda}_{i,h}\mathit{PAT}_i \mathit{XA}_{i,\mathit{h}}}$}
+   & {$\sum_i{\tau^a_{i,\mathit{gov}} \gamma^{eda}_{i,\mathit{gov}}\mathit{PAT}_i \mathit{XA}_{i,\mathit{gov}}}$}
+   & {$\sum_i{\tau^a_{i,\mathit{inv}} \gamma^{eda}_{i,\mathit{inv}}\mathit{PAT}_i \mathit{XA}_{i,\mathit{inv}}}$}
+   & {} \\
+\emph{Production tax}      & {} & {} & {} & {} \\
+\emph{Factor taxes}        & {} & {} & {} & {} \\
+\emph{Import tax}          & {} & {} & {} & {} \\
+\emph{Export tax}          & {} & {} & {} & {} \\
+\emph{Direct tax}          & {$\kappa^h\mathit{YH}$} & {} & {} & {} \\
+\emph{Household}           & {} & {} & {} & {} \\
+\emph{Government}          & {} & {} & {} & {} \\
+\emph{Investment}          & {$S^h$} & {$S^g$} & {} & {$\mathit{DeprY}$} \\
+\emph{Depreciation}        & {$\mathit{DeprY}$} & {} & {} & {} \\
+\emph{Trade margins}       & {} & {} & {} & {} \\
+\emph{Trade}($s$)          & {} & {} & {} & {} \\
+\emph{Balance of payments} & {} & {$\mathit{ODAOut}$} & {} & {} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\end{tabular}
+\end{table}
+\end{landscape}
+
+\begin{landscape}
+\begin{table}
+\scriptsize
+\caption*{Table~\ref{tab:AnalSAM} Analytical SAM, ctd.}
+\centering
+\rowcolors{2}{TableOdd}{TableEven}
+\rowcolors{1}{}{lightblue}
+\begin{tabular}{l c c c }
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+{} & \bf{\emph{TMG}($\mathit{fd}$)}  & \bf{\emph{TRD}($\mathit{d}$)}  & \bf{\emph{BOP}} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\emph{Activities}($a$)            & {} & {} & {} \\
+\emph{Commodities}($i$)
+ & {$\mathit{PDT}_i \mathit{XTT}_i$}
+ & {$\sum_d{\mathit{PWE}_{r,i,d} \mathit{XW}_{r,i,d}}$}
+ & {} \\
+\emph{Labor}($l$)                   & {} & {} & {} \\
+\emph{Capital}($\mathit{cap}$)      & {} & {} & {} \\
+\emph{Land}($\mathit{lnd}$)         & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{nrs}$)    & {} & {} & {} \\
+\emph{Nat. Res.}($\mathit{wat}$)    & {} & {} & {} \\
+\emph{Indirect tax}                 & {} & {} & {} \\
+\emph{Production tax}               & {} & {} & {} \\
+\emph{Factor taxes}                 & {} & {} & {} \\
+\emph{Import tax}                   & {} & {} & {} \\
+\emph{Export tax}                   & {} & {} & {} \\
+\emph{Direct tax}                   & {} & {} & {} \\
+\emph{Household}
+   & {}
+   & {}
+   & {$\sum_s{\mathit{Remit}_{r,l,s}} + \mathit{YQHT}_r$} \\
+\emph{Government}           & {} & {} & {$\mathit{ODAOut}$} \\
+\emph{Investment}
+   & {}
+   & {}
+   & {$\mathit{PW}^{\mathit{sav}} S^f_r$} \\
+\emph{Depreciation}         & {} & {} & {} \\
+\emph{Trade margins}
+   & {}
+   & {}
+   & {$\sum_i{\mathit{PDT}_{r,i}\mathit{XTT_{r,i}}}$} \\
+\emph{Trade}($s$)
+   & {}
+   & {}
+   & {$\sum_d{\sum_i{\mathit{PWE}_{r,i,d} \mathit{XW}_{r,i,d}}}$} \\
+\emph{Balance of payments}
+   & {} & {$\sum_s{\sum_i{{\mathit{PWM}_{s,i,r} \mathit{XW}_{s,i,r}}}}$} & {} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\end{tabular}
+\end{table}
+\end{landscape}
+
+\section{Correspondence to GTAP database}
+
+Table~\ref{tab:corrtab} provides the correspondence between the variables in the
+GAMS model and the standard GTAP database that is used as the starting basis for
+the GTAP model. Note that The GTAP database reflects an Armington structure that
+is agent-specific (at the top nest). The model allows for either a national or
+agent-specific decomposition of domestic absorption across sources. The
+correspondence herein reflects national sourcing. Hence, the domestic/import
+split by agent in the GTAP database is aggregated to provide demand at the
+Armington level.
+
+\begin{landscape}
+\begin{table}
+\small
+\caption{Correspondence between GAMS model variables and GTAP database}
+\label{tab:corrtab}
+\centering
+\rowcolors{2}{TableOdd}{TableEven}
+\rowcolors{1}{}{lightblue}
+\begin{tabular}{ l l l c }
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\bf{\emph{GTAP}} & \bf{\emph{GAMS}}  & \bf{\emph{Description}} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+{\texttt{VDFB}+\texttt{VIFB}} &
+   $\mathit{PAT}_{r,i}\mathit{XA}_{r,i,a}$ &
+   {Firms' (Armington) purchases at basic prices} \\
+{\texttt{VDFP}+\texttt{VIFP}} &
+   $\mathit{PA}_{r,i,a}\mathit{XA}_{r,i,a}$ &
+   {Firms' (Armington) purchases at purchaser prices} \\
+{\texttt{VDPB}+\texttt{VIPB}} &
+   $\mathit{PAT}_{r,i}\mathit{XA}_{r,i,h}$ &
+   {Household (Armington) purchases at basic prices} \\
+{\texttt{VDPP}+\texttt{VIPP}} &
+   $\mathit{PA}_{r,i,h}\mathit{XA}_{r,i,h}$ &
+   {Household (Armington) purchases at purchaser prices} \\
+{\texttt{VDGB}+\texttt{VIGB}} &
+   $\mathit{PAT}_{r,i}\mathit{XA}_{r,i,\mathit{gov}}$ &
+   {Government (Armington) purchases at basic prices} \\
+{\texttt{VDGP}+\texttt{VIGP}} &
+   $\mathit{PA}_{r,i,\mathit{gov}} \mathit{XA}_{r,i,\mathit{gov}}$ &
+   \small{Government (Armington) purchases at purchasers prices} \\
+{\texttt{VDIB}+\texttt{VIIB}} &
+   $\mathit{PAT}_{r,i}\mathit{XA}_{r,i,\mathit{inv}}$ &
+   \small{Investment (Armington) purchases at basic prices} \\
+{\texttt{VDIP}+\texttt{VIIP}} &
+   $\mathit{PA}_{r,i,\mathit{inv}}\mathit{XA}_{r,i,\mathit{inv}}$ &
+   \small{Investment (Armington) purchases at purchaser prices} \\
+{\texttt{EVFB(f)}} &
+   $\mathit{PF}_{r,f,a}\mathit{XF}_{r,f,a}$ &
+   {Firms' purchases of factors at basic prices} \\
+{\texttt{EVFP(f)}} &
+   $\mathit{PF}^p_{r,f,a}\mathit{XF}_{r,f,a}$ &
+   {Firms' purchases of factors at purchaser prices} \\
+{\texttt{VOS}} &
+   $\mathit{PX}_{r,a}\mathit{XP}_{r,a}$ &
+   {Value of production at producer cost} \\
+{\texttt{MAKB}} &
+   $\mathit{P}_{r,a,i}\mathit{X}_{r,a,i}$ &
+   {Value of make matrix at basic prices} \\
+{\texttt{MAKS}} &
+   $\mathit{PP}_{r,a,i}\mathit{X}_{r,a,i}$ &
+   {Value of make matrix at suppliers' prices} \\
+{\texttt{EVOS(f)}} &
+   $(1-\kappa^f_{r,f,a}){\mathit{PF}_{r,f,a}\mathit{XF}_{r,f,a}}$ &
+   {After tax factor remuneration} \\
+{\texttt{VKB}}  &
+   $\mathit{K}^s_{r}$ &
+   {Initial capital stock} \\
+{\texttt{VDEP}} &
+   $\mathit{DeprY}$ &
+   {Value of depreciation} \\
+{\texttt{VIMB}} &
+   $\mathit{PDM}_{s,i,r}\mathit{XW}^d_{s,i,r}$ &
+   {Value of bilateral imports tariff inclusive} \\
+{\texttt{VCIF}} &
+   $\mathit{PWM}_{s,i,r}\mathit{XW}^d_{s,i,r}$ &
+   {Value of bilateral imports at border prices} \\
+{\texttt{VFOB}} &
+   $\mathit{PWE}_{r,i,d}\mathit{XW}^s_{r,i,d}$ &
+   {Value of bilateral exports at border prices} \\
+{\texttt{VXSB}} &
+   $\mathit{PE}_{r,i,d}\mathit{XW}^s_{r,i,d}$ &
+   {Value of bilateral exports at producer prices} \\
+{\texttt{VST}}  &
+   $\mathit{PDT}_{r,m}\mathit{XTT}_{r,m}$ &
+   {Domestic exports of trade \& transport services} \\
+{\texttt{VTWR}} &
+   $\mathit{PTMG}_{m}\mathit{XMG}^m_{m,r,i,d}$ &
+   {Value of margins from $r$ to $d$ for good $i$ using mode $m$} \\
+{\texttt{POP}}
+   & $\mathit{Pop}_{r}$ &
+   {Population---millions} \\
+\arrayrulecolor{TableBorder}\specialrule{1pt}{0pt}{0pt}
+\end{tabular}
+\end{table}
+\end{landscape}

@@ -1,0 +1,33 @@
+\begin{tikzpicture}[x=30mm,y=30mm]
+
+%\draw[help lines] (0,0) grid (13,13);
+
+\draw[->] (0,0) -- (2.7,0) node[right] {$P$};
+\draw[->] (0,0) -- (0,2.7) node[right] {$Q,\eta$};
+
+\draw[color=gray!30] (1,0) -- (1,2.5) node[right] {\color{black}{$P=1$}};
+\draw[color=gray!30] (0,0.5) -- (2.5,0.5) node[below right] {\color{black}{$\eta=0.5$}};
+\draw[color=gray!30] (0,2) -- (2.5,2) node[below right] {\color{black}{$\eta=2.0$}} ;
+
+%\foreach \i in {0.5,1.0,...,2.5} {
+%	\draw[color=gray!30] (\i,0) -- (\i,2.5) ;
+%}
+
+%\foreach \i in {0.5,1.0,...,2.5} {
+%	\draw[color=gray!30] (0,\i) -- (2.5,\i) ;
+%}
+
+% 'Up' supply curve
+\draw[scale=1.0,domain=1.0:2.3,smooth,blue,thick] 
+	plot({\x},{1.5 * ((\x)^(2.0 - (1.5 / (1.0 + exp(10.0*(1.0-(\x))) )))})
+	node[above] {\large\emph{Supply}};
+
+% 'Down' supply curve
+% Huge problems with math
+\draw[scale=1.0,domain=0.1:1.0,smooth,blue, thick] 
+	plot({\x}, {exp(ln(1.5) + (2.0-1.5/(1+exp(10-10*(\x))))*ln((\x)))} ) ;
+
+\draw[scale=1,domain=0.1:2.3,smooth,red,thick] 
+	plot({\x},{2.0+(1/(1+exp(-10*(\x-1))))*(0.5-2.0)})
+	node[above left] {\large$\eta$};
+\end{tikzpicture}

@@ -1,0 +1,214 @@
+\subsection{The carbon cycle}
+
+The carbon cycle described herein is derived
+from \cite{MillaretalACP2017} and \cite{SmithetalGMD2018}
+as implemented by \cite{Haensel2020} and 
+is known as the \emph{Finite Amplitude Impulse Response} (FAIR) model. 
+
+The carbon cycle depends on total \COT{} emissions:
+fossil-fuel combustion-based, other industrial \COT{} emissions, $\mathit{EmiX}^C$,
+and changes in land-use emissions, $\mathit{EmiLand}^C$. For
+the moment, the latter two sources of \COT{} emissions are
+exogenous. Total global \COT{} emissions are provided
+in equation~(\ref{eq:ECO2}). 
+
+The carbon cycle also depends
+on cumulative carbon emissions---expressed in gtC.
+Equation~(\ref{eq:cume}) represents the standard
+cumulative expression, where industrial emissions
+are converted from gtCO2 to gtC.
+Equation~(\ref{eq:cumetot}) takes into account
+the exogenous cumulative emissions from land-use changes.
+The starting point for 2015 is 400 gtC of cumulative
+industrial emissions and 197 gtC of cumulative land-use
+emissions.\footnote{\cite{Haensel2020} use a value of 197 gtC, which
+is nearly double the level in the 2016 version of the DICE model, see
+\cite{Nordhaus2016NBERw22933}.}
+
+\begin{equation}
+\label{eq:ECO2}
+\mathit{Emi}^C_t = \mathit{EmiGbl}_{\mathit{co2},t}
+ + \mathit{EmiX}^C_t + \mathit{EmiLand}^C_t
+\end{equation}
+
+\begin{equation}
+\label{eq:cume}
+\mathit{CumEmiInd}_t = \mathit{CumEmiInd}_{t-1} 
++ (12/44) \left(\mathit{EmiGbl}_{\mathit{co2},t-1}
+ + \mathit{EmiX}^C_{t-1} \right)
+\end{equation}
+
+\begin{equation}
+\label{eq:cumetot}
+\mathit{CumEmi}^T_t = \mathit{CumEmiInd}_t + \mathit{CumEmiLand}_t
+\end{equation}
+
+The FAIR model uses anthropogenic fossil and land use \COT{}
+emissions as input and partitions them into four boxes $R_b$---with
+partition fraction $\phi$ and $\tau$ representing the
+differing timescales of carbon uptake by geological processes
+(\texttt{GEOPR}), the deep ocean (\texttt{DPOCN}), the biosphere (\texttt{BIOSF}) and the ocean
+mixed layer (\texttt{MXOCN}). The one-step motion equation
+is given by equation~(\ref{eq:r1}). The carbon reservoir receives a
+fraction of the \COT{} emissions impulse and it is adjusted by some
+level of 'decay'.\footnote{Appendix~\ref{chap:AppDyn} describes
+the multi-step version of the carbon cycle.}
+The $\alpha$ parameter is endogenous and is calibrated dynamically so
+that the overall behavior of the carbon cycle mimics other earth systems models (ESMs). This is detailed further below.
+
+\begin{equation}
+\label{eq:r1}
+\Delta \mathit{R}_{b,t} = \phi_b (12/44) E_{t-1} - \displaystyle \frac {\mathit{R}_{b,t-1}}{\alpha \tau_b} \iff \mathit{R}_{b,t} = \mathit{R}_{b,t-1} \left(\displaystyle 1 -\frac {1}{\alpha \tau_b} \right) + \phi_b (12/44) \mathit{Emi}^C_{t-1}
+\end{equation}
+
+The calibration of $\alpha$ is based
+on \cite{MillaretalACP2017}:
+"To identify a suitable state dependence, we focus on parameterising
+variations in the 100-year integrated impulse response
+function, $\mathit{iIRF100}$. A focus on the integrated impulse
+response (average airborne fraction over a period of time,
+multiplied by the length of time period), as opposed to the
+airborne fraction at a particular point in time, is more closely
+related to the impact of \COT{} emissions on the global energy
+budget, and also to other metrics such as global warming potential.
+With other coefficients fixed, iIRF100 is a monotonic
+(but nonlinear) function of $\alpha$." 
+Equation~(\ref{eq:iIRF100A}) expresses this relation.
+
+In addition from the same
+authors, "We assume $\mathit{iIRF100}$ is a function of the accumulated
+perturbation carbon stock in the land and ocean (equivalent
+to the amount of emitted carbon that no longer resides in
+the atmosphere), ..., and of the global
+mean temperature anomaly from preindustrial conditions, $T^{\mathit{atm}}$."
+Equation~(\ref{eq:iIRF100B}) expresses this relation,
+where $\mathit{MAT}$ is the carbon stock residing in the atmosphere.
+In the model code, the two expressions for $\mathit{iIRF100}$
+are substituted out and this relation determines the $\alpha$ parameter
+dynamically. Finally, equation~({\ref{eq:mat}}) defines the atmospheric concentration (in gTC)
+for each time period.
+
+\begin{equation}
+\label{eq:iIRF100A}
+\mathit{iIRF100} = \displaystyle \sum_b{\alpha_t \phi_b \tau_b \left[
+1 - \exp\left( -\frac{100}{\alpha_t \tau_b}\right)\right] }
+\end{equation}
+
+\begin{equation}
+\label{eq:iIRF100B}
+\mathit{iIRF100} = r_0 + r_C\left(\mathit{CumEmi}^T_t - (\mathit{MAT}_t - 588)\right)
++ r_T T^{\mathit{atm}}_t
+\end{equation}
+
+\begin{equation}
+\label{eq:mat}
+\mathit{MAT}_{t} = \sum_b{\mathit{R}_{b,t}} + 588
+\end{equation}
+
+\subsection{Radiative forcing}
+
+Radiative forcing is the sum of the impacts of individual gases on radiative forcing.
+In the case of carbon, it takes a logarithmic form where the key parameter is
+$\kappa$, which represents the equilibrium level of forcing for a doubling of carbon
+concentration relative to its pre-industrial level. The default
+parameterization sets $\kappa=3.6813$. At the moment, all other forcings
+are collapsed into a single exogenous time-varying level.\footnote{Future model
+versions will add endogenous forcings for some of the other gases that
+are generated by \textsc{Envisage}.}
+
+\begin{equation}
+\mathit{FORC}_{\mathit{CO2},t} = \kappa \frac{\ln\left[\mathit{MAT}_t/\mathit{MAT}^e \right]}{\ln(2)}
+\end{equation}
+
+
+\begin{equation}
+\mathit{RF}_{t} = \sum_{\mathit{frc}}{\mathit{FORC}_{\mathit{em},t}} +  \mathit{FORC}^X_{t}
+\end{equation}
+
+\subsection{The energy balance model (EBM)}
+
+The energy balance model (EBM) is derived from \cite{LeachetalFAIR2_0GeoModDev2020}.
+This EBM has a 3-box model: land and atmosphere (\texttt{ATMOS}), shallow (\texttt{UPOCN}) and deep oceans (\texttt{DPOCN}).
+A common representation
+of this physical process is outlined by \cite{GeoffroyetalJClim2013A}. 
+The \cite{LeachetalFAIR2_0GeoModDev2020} paper extends the 2-box model
+to three boxes to better represent the transient response.
+
+The motion equation for the change in temperature across the three
+boxes is represented by the following matrix differential equation:
+
+\[
+\mathbf{\dot T} = A \mathbf{T} + \mathbf{M} \mathit{RF}
+\]
+
+\noindent where $\mathbf{\dot T}'=[\begin{array}{c c c } \dot T_{\mathit{atmos}} & \dot T_{\mathit{upocn}} & \dot T_{\mathit{upocn}}\end{array}]$,
+$\mathbf{T'} = [\begin{array}{c c c } T_{\mathit{atmos}} & T_{\mathit{upocn}} & T_{\mathit{upocn}}\end{array}]$, $\mathit{RF}$ is radiative
+forcing, $\mathbf{M'} = [\begin{array}{c c c } 1/C_1 & 0 & 0\end{array}]$ and:
+
+\[
+A = \left( \begin{array}{c c c }
+-\left(\lambda+\kappa_2\right)/C_1 & \kappa_2/C_1 & 0 \\
+\kappa_2/C_2 & -\left(\kappa_2 +\varepsilon \kappa_3\right)/C_2 &
+\varepsilon \kappa_3/C_2 \\
+0 & \kappa_3/C_3 & - \kappa_3/C_3 \\
+\end{array} \right)
+\]
+
+The '$C$' parameters represent the heat capacity of each of the
+boxes. The '$\kappa$' parameters represent the heat exchange
+coefficients between the boxes. The '$\lambda$' parameter is called
+the climate feedback parameter. And the '$\epsilon$' parameter
+is an efficacy factor that affects transient warming. In the
+form given in equation~(\ref{eq:TEMP}), the change in atmospheric temperature
+can be solved as a difference equation, which also includes
+the temperature of the two ocean layers.\footnote{In the FAIR model, the EBM model
+is converted to an impulse-response model that only solves for the change
+in atmospheric temperature. In essence, this involves diagonalizing
+the $A$ matrix by calculating the eigenvalues and eigenvectors. Both
+the EBM and IR versions yield very similar results. Results available
+from the author.}
+
+\begin{equation}
+\label{eq:TEMP}
+\mathbf{Temp}_t = (I+A)\mathbf{Temp}_{t-1} + \mathbf{M} \mathit{RF}_t
+\end{equation}
+
+There are different strategies for converting
+these equations for use in models with varying time
+steps. In the new GAMS code, the model
+implements equation~(\ref{eq:TEMP}) using an annual time step,
+i.e. the time dimension for this
+equation differs from the time step
+of most of the other equations. The only modification
+is for the forcing impulsion. In the current
+code, the average forcing is used for any individual
+year between two model periods. For example, if
+the year is 2023, the relevant forcing level
+is the average of 2020 and 2025 if using
+5-year time steps from 2015 forwards. Forcing is
+thus uniform between two model periods. Given
+the relatively slow evolution of forcing, the
+choice is unlikely to have a major impact
+especially with relatively small step sizes such
+as 5-years.\footnote{The relevant forcing
+for any year $\mathit{tt}$ is governed by a mapping
+between $\mathit{tt}$ and the model period denoted
+by $t$. In the code, this is governed by the mapping named \texttt{mapt}.
+It is initialized in the climate data file, for
+example \texttt{ClimDataV10} for Version 10
+of the GTAP Data Base. The user can
+change the flag \texttt{ifFORCAVG} to the
+value 0 to use only the contemporaneous
+forcing, rather than the average over two
+simulation periods.}
+
+Parameterization is based on the latest parameter
+values from \cite{LeachetalFAIR2_0GeoModDev2020}.
+\cite{Haensel2020} uses an earlier vesion
+of FAIR (v1.5), which is based on a two
+box model. In that case, $\kappa_3$ is set to zero
+and there is no need for $\epsilon$. There is
+a different interpretation of the labels. The
+label \texttt{ATMOS} represents land, atmosphere and
+the shallow oceans and the label \texttt{UPOCN} represents
+the deep ocean.
