@@ -6,9 +6,9 @@
 *
 * ------------------------------------------------------------------------------
 
-*  Set folder for Excel files
+*  Set folder for Excel files (it has to be full pathname)
 
-$setGlobal xclDir "v:\env10\Anx1\Doc\"
+$setGlobal xclDir "v:\env11\Anx1\Doc\"
 
 *  Options for CreatePivot file
 
@@ -19,19 +19,20 @@ $setGlobal modDir    "..\Model"
 *  AgMIP cube?
 $setGlobal AgMIP No
 
-$ontext
-$setGlobal DEPLFlag  ON
+
+$setGlobal DEPLFlag  OFF
 $setGlobal simTgt    BaU
 $setGlobal regTgt    USA
-$setGlobal timeTgt   2014
+$setGlobal timeTgt   2017
 $setGlobal actTgt    AGR-a
-$offtext
 
-$setGlobal DEPLFlag  ON
-$setGlobal simTgt    COMBCS
+$ontext
+$setGlobal DEPLFlag  OFF
+$setGlobal simTgt    BAU
 $setGlobal regTgt    USA
 $setGlobal timeTgt   CHECK
 $setGlobal actTgt    AGR-a
+$offtext
 
 *  Select report years
 
@@ -48,9 +49,9 @@ $offtext
 
 $elseifi "%simType%" == "RcvDyn"
 
-   set tr(t) "Reporting years" / 2014*2030 / ;
-   set trb(t) "Bilateral trade years" / 2014, 2030 / ;
-   set trm(t) "MRIO years" / 2014, 2030 / ;
+   set tr(t) "Reporting years" / 2017*2030 / ;
+   set trb(t) "Bilateral trade years" / 2017, 2030 / ;
+   set trm(t) "MRIO years" / 2017, 2030 / ;
 
 $endif
 
@@ -105,12 +106,12 @@ set tables /
    pow         "Power module"
    sam         "SAM module"
    MRIO        "MRIO table"
-   tot         "Terms of trade module"
    nrg         "Energy module"
    depl        "Depletion variables"
    climate     "Climate module"
    shock       "For future use"
    demand      "Demand"
+   welfDecomp  "Welfare decomposition"
    fbs         "Nutrition module"
    AgMIP       "Cube for AgMIP submission"
 / ;
@@ -118,7 +119,7 @@ set tables /
 *  Selected tables
 
 set ifTab(tables) /
-*  gdppop      "Macro data"
+   gdppop      "Macro data"
 *  emi         "Emissions"
 *  sam         "SAM module"
 *  MRIO        "MRIO table"
@@ -132,9 +133,8 @@ set ifTab(tables) /
 *  inv         "Investment"
 *  cost        "Production costs"
 *  ydecomp     "Growth decomposition"
-*  tot         "Terms of trade"
 *  trade       "Trade by sector"
-   ToT         "Terms of trade"
+*  ToT         "Terms of trade"
 *  fdem        "Final demand"
 *  bilat       "Bilateral trade"
 *  lab         "Labor demand"
@@ -143,5 +143,6 @@ set ifTab(tables) /
 *  depl        "Depletion variables"
 *  shock       "For future use"
 *  fbs         "Nutrition module"
+*  welfDecomp  "Welfare decomposition"
 *  AgMIP       "Cube for AgMIP submission"
 / ;
