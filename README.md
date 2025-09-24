@@ -15,7 +15,7 @@ To run the data aggregation, run the "Makedata.gms" file in the "Data" folder.
 It is setup to run the "ANX1" aggregation, with the required definitions
 for the aggregation in the folder "Data/ANX1" (but also requires the "sets"
 definition file in the (top) folder "ANX1"). To create a new aggregation, create
-a new folder in the "Data" folder with the code for the project. To start with,
+a new folder in the "Data" folder and name it with the  code for the project. To start with,
 copy the input files in the "Data/ANX1" folder, rename them, and modify them for
 this specific project, e.g., new regional and commodity aggregation. Create
 a new project folder in the top-level directory, copy the "sets" file
