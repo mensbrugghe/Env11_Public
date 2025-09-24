@@ -21,8 +21,8 @@ this specific project, e.g., new regional and commodity aggregation. Create
 a new project folder in the top-level directory, copy the "sets" file
 from the "ANX1" folder, rename it and make the desired changes. Finally,
 change the name of the project on the first line of the "MakeData.gms" file.
-If "MakeData" runs successfully, the aggregated files, all saved in the
-GDX file, will have been created in the project folder.
+If "MakeData" runs successfully, the aggregated files, all saved as
+GDX files, will have been created in the project folder.
 
 ## Initial steps for simulation
 
@@ -48,24 +48,24 @@ iterations and the maximum residual should be near zero (e.g., 1e-5 or smaller).
 The "shock" simulation can be used to test the price homogeneity of
 the model. This is done by setting the numéraire to some level different
 from 1, e.g., 1.5. The "CompShk.gms" file contains the code for doing shocks
-and it can be used for other shocks as well, e.g., tariff changes, carbon
+and it can be used for other comparative static shocks as well, e.g., tariff changes, carbon
 pricing, etc. Users can use the "runAllComp.gms" file to run comparative
 static simulations in sequence.
 
 ## Dynamic simulations
 
-Dynamic simulations are not very different from comparative static, though
+Dynamic simulations are not very different from comparative static simulations, though
 the time framework is given by actual years and the code is coupled
 with external data---such as the SSP projections. The first dynamic
 simulation is always the baseline. The baseline assumes that GDP
 pathways are fixed and the model calculates changes in labor productivity
 that produce the exogenous GDP pathways and subject to all of the
 other assumptions. With a new project, or with changes to the baseline,
-it is recommended to run a "no Shock" simulation, which should re-produce
+it is recommended to run a "no Shock" diagnostic simulation, which should re-produce
 the baseline. The code allows for loading an existing simulation
 before starting the simulation. In the case of the "no Shock" scenario, if
 the baseline file is loaded, the "no Shock" scenario should replicate
-the baseline with 0 or 1 iterations. When running policy shocks, one
+the baseline with 0 or 1 iterations for each year. When running policy shocks, one
 can use a previous simulation as a starting point, but this may not be 
 a good starting point once the policy is being implemented. In this case,
 it is best to use a prior simulation up to and including the year
@@ -77,12 +77,12 @@ choice of starting point.
 
 ##  Post-simulation
 
-The results from the simulations are contained in a GDX container. Users can
+Results from the simulations are contained in separate GDX containers. Users can
 extract the data from the containers, but this is often tedious, particularly
 since most of the variables are normalized. The "runTab.gms" file provides
 a workflow for the 'makCSV/makTab' GAMS programs that will extract
 requested data, perform additional aggregations (e.g., across regions,
-commodities, factors, etc.) and save the extracted data into CSV files. In
+commodities, factors, etc.) and save the extracted data into CSV files---for one or more simulations. In
 addition, the CSV files are automatically loaded into Excel files as Pivot tables.
 Users are free to modify the Excel files, including adding worksheets
 and additional Pivot tables and charts. Subsequent use of "runTab.gms" will
